@@ -58,7 +58,7 @@ const Home = () => {
 
     return (
         <>
-            <Input placeholder="search" onChange={search_handler} />
+            <Input p={5} placeholder={food_filters.filter.length < 1 ? `YOU NEED TO SELCT FILTER TO START SEARCHING` : "NOW START SEARCHING"} onChange={search_handler} readOnly={food_filters.filter.length < 1} />
             <form onChange={filter_handler}>
                 <label>
                     <input type="radio" name="filter_by" value="name" />
