@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Input, useDisclosure } from "@chakra-ui/react"
+import { Button, Flex, Heading, Input, Text, useDisclosure } from "@chakra-ui/react"
 import FoodCard from "../Components/Card"
 import { useData } from "../Contexts/DataContext"
 import { wrap } from "framer-motion"
@@ -22,9 +22,10 @@ const Home = () => {
         if (food_filters.filter === "name") {
             return each.name.toLowerCase().includes(food_filters.search.toLowerCase().trim())
         } else if (food_filters.filter === "cuisines") {
-            return each.type.toLowerCase().includes(food_filters.search)
+            return each.type.toLowerCase().includes(food_filters.search.toLowerCase().trim())
         } else if (food_filters.filter === "ingredients") {
-            return each.ingredients.some((element) => element.includes(food_filters.search.toLowerCase().trim()))
+            return each.ingredients.some(item => item.includes(food_filters.search.toLowerCase().trim()))
+            // return each.ingredients.some((element) => element.includes(food_filters.search.toLowerCase().trim()))
         } else {
             return each;
         }
@@ -80,6 +81,7 @@ const Home = () => {
 
             <Flex flexWrap={"wrap"}>
                 {filtered_data?.map((each_food, i) => <FoodCard key={i} {...each_food} />)}
+                {!filtered_data.length && <Heading m={"auto"} textDecoration={"underline"}>NOTHING TO SHOW HERE</Heading>}
             </Flex>
 
             <AddModal isOpen={isOpen} onClose={onClose} />
