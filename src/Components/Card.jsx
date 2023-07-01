@@ -1,7 +1,14 @@
 import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, Divider, Flex, Heading, Image, Stack, Text } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
+import { useData } from "../Contexts/DataContext"
 
 const FoodCard = ({ image, name, type }) => {
+    const { food_data, set_food_filters, food_dispatch, food_filters } = useData()
+    const delete_handler = () => {
+        const without_deleted = food_data.recipes.filter(each => each.name !== name)
+        localStorage.setItem('myrecipes', JSON.stringify(without_deleted))
+        food_dispatch({ type: "INITIALISE_DATA", payload: without_deleted })
+    }
     return (
         <>
             <Card maxW='xs'>
@@ -35,6 +42,9 @@ const FoodCard = ({ image, name, type }) => {
                         </Flex>
                     </Flex>
                 </CardBody>
+                <CardFooter>
+                    <Button onClick={delete_handler} variant={"solid"} bg={"red"} color={"black"}>Delete</Button>
+                </CardFooter>
             </Card>
         </>
     )

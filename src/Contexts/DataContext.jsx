@@ -6,15 +6,12 @@ const DataContext = createContext()
 const reciepe_reducer = (state, { type, payload }) => {
     switch (type) {
         case "INITIALISE_DATA":
+            const storedRecipes = localStorage.getItem("myrecipes");
+            const recipes = storedRecipes ? JSON.parse(storedRecipes) : payload;
             return {
                 ...state,
-                recipes: payload
+                recipes: recipes
             }
-        // case "FILTER":
-        //     return {
-        //         ...state,
-        //         filtered_recipes: state.recipes.filter(each => each[payload.filter].toLowerCase().trim() === payload.search.toLowerCase().trim()),
-        //     }
     }
 }
 
@@ -25,8 +22,8 @@ export const DataProvider = ({ children }) => {
     })
     // console.log("filters, ", food_filters)
     const initial_data = {
-        recipes: [],
-        filtered_recipes: {}
+        recipes: []
+        // filtered_recipes: {}
     }
 
     const [food_data, food_dispatch] = useReducer(reciepe_reducer, initial_data)
@@ -34,7 +31,7 @@ export const DataProvider = ({ children }) => {
     useEffect(() => {
         food_dispatch({ type: "INITIALISE_DATA", payload: recipes })
     }, [])
-    console.log("am", food_filters)
+    // console.log("am", food_filters)
     return (
         <DataContext.Provider value={{ food_data, set_food_filters, food_dispatch, food_filters }}>
             {children}

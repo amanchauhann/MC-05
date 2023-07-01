@@ -1,7 +1,8 @@
-import { Flex, Heading, Input } from "@chakra-ui/react"
+import { Button, Flex, Heading, Input, useDisclosure } from "@chakra-ui/react"
 import FoodCard from "../Components/Card"
 import { useData } from "../Contexts/DataContext"
 import { wrap } from "framer-motion"
+import AddModal from "../Components/AddModal"
 
 const Home = () => {
     const { food_data, set_food_filters, food_dispatch, food_filters } = useData()
@@ -15,8 +16,21 @@ const Home = () => {
     //     }
     // }
     // )
-    const filtered_data = food_data.recipes.filter(each => each.name.toLowerCase().trim().includes(food_filters.search))
-    console.log("aaaaa", filtered_data)
+    // const filtered_data = food_data.recipes.filter(each => each.name.toLowerCase().trim().includes(food_filters.search))
+
+    const filtered_data = food_data.recipes.filter(each => {
+        if (food_filters.filter === "name") {
+            return each.name.toLowerCase().includes(food_filters.search.toLowerCase().trim())
+        } else if (food_filters.filter === "cuisines") {
+            return each.type.toLowerCase().includes(food_filters.search)
+        } else if (food_filters.filter === "ingredients") {
+            return each.ingredients.some((element) => element.includes(food_filters.search.toLowerCase().trim()))
+        } else {
+            return each;
+        }
+    })
+    // console.log("aaaaa", filtered_data)
+
 
     const search_handler = (e) => {
         set_food_filters(prev => ({ ...prev, search: e.target.value }))
@@ -29,7 +43,7 @@ const Home = () => {
     }
 
     const filter_handler = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         set_food_filters(prev => ({ ...prev, filter: e.target.value }))
         // food_dispatch({
         //     type: "FILTER", payload: {
@@ -38,6 +52,9 @@ const Home = () => {
         //     }
         // })
     }
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
         <>
@@ -56,16 +73,16 @@ const Home = () => {
                     Cusinies
                 </label>
             </form>
-
+            <Button onClick={onOpen} m={3} color={"white"} bg={"red"}>Add Recipie</Button>
             <Heading>
                 ALL PRODUCTS
             </Heading>
 
             <Flex flexWrap={"wrap"}>
-                {food_data.recipes?.map((each_food, i) => <FoodCard key={i} {...each_food} />)}
+                {filtered_data?.map((each_food, i) => <FoodCard key={i} {...each_food} />)}
             </Flex>
 
-
+            <AddModal isOpen={isOpen} onClose={onClose} />
         </>
     )
 }

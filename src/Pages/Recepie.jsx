@@ -7,6 +7,7 @@ const Recepie = () => {
     const { food_data: { recipes } } = useData()
     const filtered_recipe = recipes.filter(each => each.name.toLowerCase().trim() === item.toLowerCase().trim())
     const { image, type, ingredients, instructions } = filtered_recipe[0]
+    console.log(filtered_recipe)
     return (
         <>
             <Card
